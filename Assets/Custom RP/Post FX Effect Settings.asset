@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: Post FX Effect Settings
   m_EditorClassIdentifier: 
   shader: {fileID: 4800000, guid: d17fde2f5ef8b424e85f27c53a596d1f, type: 3}
-  material: {fileID: 0}
+  material: {fileID: 2100000, guid: e8f3f6183c991eb4ca7f692dba7ac9a5, type: 2}
   particleWater:
     useParticleWater: 1
-    waterColor: {r: 0, g: 0.07058824, b: 0.7490196, a: 1}
+    waterColor: {r: 0, g: 0.28235295, b: 2.9960785, a: 1}
     renderingLayerMask: 2
     bilaterFilterStrength: 0.5
     biurRadius: 4
     airRrfraRadio: 0.17
-    waterRrfraRadio: 1
+    waterRrfraRadio: 0.46

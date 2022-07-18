@@ -7,8 +7,6 @@ namespace FireControl.Effect.Fire
 {
     public class SimpleFireNode : FireRoutineBase
     {
-
-
         public override void RotinuFuction(int nodeCount)
         {
             burnRange += fireValue * Time.deltaTime * nodeCount * spreadSpeed;
@@ -28,7 +26,6 @@ namespace FireControl.Effect.Fire
         protected override void Start()
         {
             base.Start();
-
         }
 
 

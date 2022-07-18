@@ -51,11 +51,11 @@ MonoBehaviour:
   toneMapping:
     mode: 1
   bulkLight:
-    useBulkLight: 0
-    shrinkRadio: 16
-    circleCount: 64
+    useBulkLight: 1
+    shrinkRadio: 100
+    circleCount: 36
     scatterRadio: 0
-    checkDistance: 3000
+    checkDistance: 40
     fogTex: {fileID: 2800000, guid: 0b25fb23011795d4c814e8d214a59759, type: 3}
     fogMaxHeight: 100
     fogMinHeight: 0

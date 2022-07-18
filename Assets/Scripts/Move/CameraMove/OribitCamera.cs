@@ -76,7 +76,7 @@ namespace FireControl.Motor
             focusPoint = focus.position;
             regularCamera = GetComponent<Camera>();
         }
-        public Quaternion lookRotation;
+        Quaternion lookRotation;
 
         /// <summary>
         /// 摄像机是逐帧刷新的，因此摄像机行为也要逐帧刷新

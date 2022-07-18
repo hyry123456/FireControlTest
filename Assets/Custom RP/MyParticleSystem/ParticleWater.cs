@@ -27,8 +27,7 @@ namespace Common.ParticleSystem
 
         public float rayDis = 10;
 
-        /// <summary>       /// 射线检测用的layer        /// </summary>
-        public LayerMask rayLayer;
+        public LayerMask layer;
 
         #region CurveDate
         //移动大小曲线
@@ -189,7 +188,7 @@ namespace Common.ParticleSystem
                 upPos += upDir * upTime;
                 veTemp = upPos - transform.position;
                 //第一条线射中目标，检查是否上方有东西阻挡
-                if (Physics.Raycast(transform.position, veTemp, out raycastHit, veTemp.magnitude, rayLayer))
+                if (Physics.Raycast(transform.position, veTemp, out raycastHit, veTemp.magnitude, layer))
                 {
                     OneRayHit(raycastHit, raycastHit.distance, upTime);
                     Debug.DrawLine(transform.position, raycastHit.point, Color.red);
@@ -201,7 +200,7 @@ namespace Common.ParticleSystem
                 //默认底部高度
                 buttonY = transform.position.y - 1;
 
-                if (Physics.Raycast(transform.position, Vector3.down, out raycastHit, float.MaxValue, rayLayer))
+                if (Physics.Raycast(transform.position, Vector3.down, out raycastHit, float.MaxValue, layer))
                 {
                     buttonY = raycastHit.point.y;
                 }
@@ -218,7 +217,7 @@ namespace Common.ParticleSystem
 
 
             //第二条射线默认无限距离，往尽头射
-            if (Physics.Raycast(upPos, downPos - upPos, out raycastHit, float.MaxValue, rayLayer))
+            if (Physics.Raycast(upPos, downPos - upPos, out raycastHit, float.MaxValue, layer))
             {
                 TwoRayHit(raycastHit, upPos, veTemp.magnitude, transform.forward, downTime + upTime);
                 Debug.DrawLine(upPos, raycastHit.point, Color.black);
