@@ -16,10 +16,9 @@ namespace CustomRP.GPUPipeline
         public Vector4 color;
         public float size;
     }
-    struct ParticleGroupData
+    struct ParticleOrigenData
     {
         public Vector3 beginPos;
-        public float lifeTime;
     };
 
     public class ParticleSimple : GPUPipelineBase
@@ -31,7 +30,7 @@ namespace CustomRP.GPUPipeline
         int childCount = 0;
 
         int particleBufferId = Shader.PropertyToID("_ParticleBuffer"),
-            particleGroupBufferId = Shader.PropertyToID("_ParticleGroupBuffer"),
+            particleGroupBufferId = Shader.PropertyToID("_ParticleOrigenBuffer"),
             groupDataId = Shader.PropertyToID("_GroupData"),
             arriveIndexId = Shader.PropertyToID("_ArriveIndex"),
             speedStartId = Shader.PropertyToID("_SpeedStart"),
@@ -40,6 +39,7 @@ namespace CustomRP.GPUPipeline
             rowCountId = Shader.PropertyToID("_RowCount"),
             colCountId = Shader.PropertyToID("_ColCount"),
             timeId = Shader.PropertyToID("_Time"),
+            lifeTimeId = Shader.PropertyToID("_LifeTime"),
             colorsId = Shader.PropertyToID("_Colors"),
             alphasId = Shader.PropertyToID("_Alphas"),
             sizesId = Shader.PropertyToID("_Sizes");
@@ -147,21 +147,19 @@ namespace CustomRP.GPUPipeline
             particleBuffer.SetData(particleDatas);
 
             //准备每组的根据数据
-            origenBuffer = new ComputeBuffer(childCount, sizeof(float) * (3 + 1));
-            List<ParticleGroupData> particleGroupDatas = new List<ParticleGroupData>(childCount);
+            origenBuffer = new ComputeBuffer(childCount, sizeof(float) * (3));
+            List<ParticleOrigenData> particleGroupDatas = new List<ParticleOrigenData>(childCount);
             for (int i = 0; i < childCount; i++)
             {
                 if (isStatic)
-                    particleGroupDatas.Add(new ParticleGroupData
+                    particleGroupDatas.Add(new ParticleOrigenData
                     {
                         beginPos = beginPoss[i],
-                        lifeTime = this.liveTime
                     });
                 else
-                    particleGroupDatas.Add(new ParticleGroupData
+                    particleGroupDatas.Add(new ParticleOrigenData
                     {
                         beginPos = transform.GetChild(i).position,
-                        lifeTime = this.liveTime
                     });
 
             }
@@ -233,6 +231,8 @@ namespace CustomRP.GPUPipeline
                 colors[i].w = gradientColorKeys[i].time;
             }
             computeShader.SetVectorArray(colorsId, colors);
+
+            computeShader.SetFloat(lifeTimeId, liveTime);
         }
 
         /// <summary>        /// 设置时时帧数据        /// </summary>

@@ -9,6 +9,8 @@ struct Varyings {
 	float2 baseUV : VAR_BASE_UV;
 };
 
+bool _ShadowPancaking;
+
 Varyings ClustShadowPassVertex(uint id : SV_VertexID, 
     uint instanceID : SV_InstanceID)
 {
@@ -27,13 +29,15 @@ Varyings ClustShadowPassVertex(uint id : SV_VertexID,
         o.baseUV = tri.uv0_2;
     }
 
-	#if UNITY_REVERSED_Z
-		o.positionCS.z =
-			min(o.positionCS.z, o.positionCS.w * UNITY_NEAR_CLIP_VALUE);
-	#else
-		o.positionCS.z =
-			max(o.positionCS.z, o.positionCS.w * UNITY_NEAR_CLIP_VALUE);
-	#endif
+	if (_ShadowPancaking) {
+		#if UNITY_REVERSED_Z
+				o.positionCS.z =
+					min(o.positionCS.z, o.positionCS.w * UNITY_NEAR_CLIP_VALUE);
+		#else
+				o.positionCS.z =
+					max(o.positionCS.z, o.positionCS.w * UNITY_NEAR_CLIP_VALUE);
+		#endif
+	}
 
     return o;
 }

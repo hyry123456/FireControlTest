@@ -155,7 +155,6 @@ public class Shadows {
 		if (light.shadows == LightShadows.None || light.shadowStrength <= 0f) {
 			return new Vector4(0f, 0f, 0f, -1f);
 		}
-
 		float maskChannel = -1f;
 		LightBakingOutput lightBaking = light.bakingOutput;
 		if (

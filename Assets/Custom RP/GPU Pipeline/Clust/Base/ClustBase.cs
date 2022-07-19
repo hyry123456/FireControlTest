@@ -199,7 +199,7 @@ namespace CustomRP.GPUPipeline.Clust
             if (compute == null || showMat == null || camera == null) return;
 
             //获得裁剪数据
-            Vector4[] planes = ViewCulling.GetFrustumPlane(Camera.main);
+            Vector4[] planes = ViewCulling.GetFrustumPlane(camera);
             buffer.SetComputeBufferParam(compute, Cam_Light_Cull_kernel, inputPosId, triangleBuffer);   //传递所有三角形数据
             buffer.SetComputeBufferParam(compute, Cam_Light_Cull_kernel, inputBoundId, boundsBuffer);   //传递所有边框数据
             buffer.SetComputeBufferCounterValue(lightCullResult, 0);                          //初始化结果栈

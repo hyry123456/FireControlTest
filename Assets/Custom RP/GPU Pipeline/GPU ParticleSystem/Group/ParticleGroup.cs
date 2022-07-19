@@ -5,6 +5,7 @@ using UnityEngine.Rendering;
 
 namespace CustomRP.GPUPipeline
 {
+    [System.Serializable]
     public struct ParticlePerObject        //当个物体的数据
     {
         public Vector3 beginPos;
@@ -21,7 +22,7 @@ namespace CustomRP.GPUPipeline
         int particleBufferId = Shader.PropertyToID("_ParticleBuffer"),
             particleGroupBufferId = Shader.PropertyToID("_ParticleGroupBuffer"),
             groupDataId = Shader.PropertyToID("_GroupData"),
-            arriveIndexId = Shader.PropertyToID("_ArriveIndex"),
+            lifeTimeId = Shader.PropertyToID("_LifeTime"),
             speedStartId = Shader.PropertyToID("_SpeedStart"),
             speedEndId = Shader.PropertyToID("_SpeedEnd"),
             uvCountId = Shader.PropertyToID("_UVCount"),
@@ -49,28 +50,20 @@ namespace CustomRP.GPUPipeline
         public Gradient colorWithLive;
 
 
-
-        public ParticleGroup()
-        {
-            saveName = "particleGroup.particle";
-        }
-
-
-
         /// <summary>
         /// 注意，这个是粒子组，也就是说所有粒子每一组是独立的，不想Simple一样统一管理的，
         /// 因此需要根据每帧传入的数据进行对根据buffer的刷新
         /// </summary>
-        public void ReadyBuffer(List<ParticlePerObject> objects)
+        public void ReadyBuffer(ParticlePerObject[] objects)
         {
             particleBuffer?.Dispose();
             origenBuffer?.Dispose();
 
-            particleBuffer = new ComputeBuffer(objects.Count * particleSize, 
+            particleBuffer = new ComputeBuffer(objects.Length * particleSize, 
                 sizeof(float) * (4 + 2 + 3 + 4 + 1 + 4 + 1));
-            List<ParticleData> particleDatas = new List<ParticleData>(particleSize * objects.Count);
+            List<ParticleData> particleDatas = new List<ParticleData>(particleSize * objects.Length);
 
-            for (int i = 0; i < objects.Count; i++)
+            for (int i = 0; i < objects.Length; i++)
             {
                 for (int j = 0; j < particleSize; j++)
                 {
@@ -85,7 +78,7 @@ namespace CustomRP.GPUPipeline
             }
             particleBuffer.SetData(particleDatas);
 
-            origenBuffer = new ComputeBuffer(objects.Count, sizeof(float) * (3 + 1));
+            origenBuffer = new ComputeBuffer(objects.Length, sizeof(float) * (3 + 1));
             origenBuffer.SetData(objects);
 
             if (material.renderQueue >= 3000)
@@ -95,22 +88,33 @@ namespace CustomRP.GPUPipeline
             isInsert = true;
 
             SetUnUpdateData();
+
         }
 
         /// <summary>
         /// 更新根据buffer，也就是每一组的数据，注意要先准备过后才调用该函数
         /// </summary>
-        public void UpdatePerObjectsBuffer(List<ParticlePerObject> objects)
+        public void UpdatePerObjectsBuffer(ParticlePerObject[] objects)
         {
+            origenBuffer?.Dispose();
+            origenBuffer = new ComputeBuffer(objects.Length, sizeof(float) * (3 + 1));
             origenBuffer.SetData(objects);
         }
 
-        public override void DrawClustByCamera(ScriptableRenderContext context, CommandBuffer buffer, ClustDrawType drawType, Camera camera)
+        public override void DrawClustByCamera(ScriptableRenderContext context, 
+            CommandBuffer buffer, ClustDrawType drawType, Camera camera)
         {
-            throw new System.NotImplementedException();
+            if (origenBuffer.count == 0) return;
+            material.SetBuffer(particleBufferId, particleBuffer);
+            material.SetInt(rowCountId, rowCount);
+            material.SetInt(colCountId, colCount);
+            buffer.DrawProcedural(Matrix4x4.identity, material, 0, MeshTopology.Points,
+                1, particleSize * origenBuffer.count);
+            ExecuteBuffer(ref buffer, context);
         }
 
-        public override void DrawClustByProjectMatrix(ScriptableRenderContext context, CommandBuffer buffer, ClustDrawType drawType, Matrix4x4 projectMatrix)
+        public override void DrawClustByProjectMatrix(ScriptableRenderContext context, 
+            CommandBuffer buffer, ClustDrawType drawType, Matrix4x4 projectMatrix)
         {
             return;
         }
@@ -153,6 +157,8 @@ namespace CustomRP.GPUPipeline
                 colors[i].w = gradientColorKeys[i].time;
             }
             computeShader.SetVectorArray(colorsId, colors);
+
+            computeShader.SetFloat(lifeTimeId, liveTime);
         }
 
         void SetUpdateData()
@@ -162,6 +168,7 @@ namespace CustomRP.GPUPipeline
 
             //设置时间
             computeShader.SetVector(timeId, new Vector4(Time.time, Time.deltaTime));
+
         }
 
         private void Update()

@@ -1,26 +1,18 @@
 using UnityEngine;
 
-namespace FireControl.Effect.Fire
+namespace FireControl.Effect
 {
     /// <summary>
     /// 运行方法的基类，方便方法重载
     /// </summary>
     public abstract class FireRoutineBase : MonoBehaviour
     {
-        /// <summary>        /// 当前火焰值        /// </summary>
+        /// <summary>        /// 火焰值燃烧过的值        /// </summary>
         public float fireValue = 0;
-        /// <summary>        /// 耐烧程度，也就是燃烧时扩散的速度        /// </summary>
-        [Range(0,1.0f)]
-        public float spreadSpeed = 0.0001f;
-        /// <summary>        /// 易燃速度，决定火焰燃烧提升速度        /// </summary>
-        public float fireAddSpeed = 0.5f;
-        /// <summary>        /// 当前燃烧过的范围        /// </summary>
-        public float burnRange = 0;
 
         protected virtual void Start()
         {
             fireValue = 0;
-            burnRange = 0;
         }
 
         /// <summary>
@@ -37,12 +29,5 @@ namespace FireControl.Effect.Fire
         /// <param name="distance">传递源的影响程度大小(0-1)</param>
         public abstract void AddBurn(float fireValue, float distance);
 
-        /// <summary>
-        /// 开始燃烧方法，让这个物体开始燃烧，燃烧值为随机值
-        /// </summary>
-        public virtual void BeginFire()
-        {
-            fireValue = Random.Range(0.0f, 1.0f);
-        }
     }
 }

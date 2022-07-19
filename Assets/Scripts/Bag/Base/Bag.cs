@@ -75,7 +75,6 @@ namespace FireControl.Equip
                 string[] strs = vs[i].Split(' ');
                 int id = int.Parse(strs[0]);
                 int type = int.Parse(strs[1]);
-                //Debug.Log(vs);
                 for(int j=0; j<allEquip.Count; j++)
                 {
                     if(allEquip[j].equipID == id)
@@ -212,7 +211,6 @@ namespace FireControl.Equip
             Assembly assembly = Assembly.GetExecutingAssembly();
             EquipBase equipBase = null;
             allEquip = new List<EquipBase>();
-            Debug.Log(strs);
             if (strs == null) yield break;
             for(int i=0; i<strs.Count; i++)
             {
@@ -281,13 +279,12 @@ namespace FireControl.Equip
             Common.FileLoad.FileReadAndWrite.WriteFile(bagSavePath, stringBuilder.ToString());
         }
 
-
-
         /// <summary>
         /// 执行武器行为
         /// </summary>
         public void RunWeapon()
         {
+            //Debug.Log("运行武器行为");
             //没有武器以及武器没有耐久了就返回
             if (weaponEquip == null || weaponEquip.equipNeogor == 0)
             {
