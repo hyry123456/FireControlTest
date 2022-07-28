@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
@@ -80,6 +79,7 @@ namespace CustomRP.GPUPipeline
         {
             string str = FileFuctions.LoadAllStr(GetSavePath());
             List<string> strs = FileFuctions.ClipByAngleBrackets(str);
+            if (strs == null) return;
             beginPoss = new List<Vector3>(strs.Count);
             foreach(string index in strs)
             {
@@ -279,12 +279,13 @@ namespace CustomRP.GPUPipeline
             return Application.streamingAssetsPath + "/Particle/" + saveName;
         }
 
-        public override string ReadyData(GameObject game, GPUPipelineBase clustBase)
+        public override string ReadyData(GameObject game, GPUPipelineBase clustBase, out int size)
         {
             StringBuilder context = new StringBuilder("");
             context.Append("<");
             context.Append(Vertex3ToString(game.transform.position));
             context.Append(">");
+            size = 0;
             return context.ToString();
         }
     }

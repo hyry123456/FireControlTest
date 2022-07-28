@@ -40,9 +40,9 @@ namespace FireControl.Equip
             GameObject gameObject = particleWater.RunWater();
             if(gameObject != null)
             {
-                Effect.FirePartNode firePartNode = gameObject.GetComponent<Effect.FirePartNode>();
-                if(firePartNode != null)
-                    firePartNode.DecreaseFireIntensity();
+                Effect.ParticleNode fireNode = gameObject.GetComponent<Effect.ParticleNode>();
+                if (fireNode != null)
+                    fireNode.AddFireIntensity(-1);
             }
             return equipReturn;
         }

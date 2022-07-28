@@ -284,7 +284,6 @@ namespace FireControl.Equip
         /// </summary>
         public void RunWeapon()
         {
-            //Debug.Log("运行武器行为");
             //没有武器以及武器没有耐久了就返回
             if (weaponEquip == null || weaponEquip.equipNeogor == 0)
             {

@@ -5,114 +5,86 @@ using UnityEngine;
 namespace FireControl.Effect
 {
     /// <summary>
-    /// 用于燃烧方法执行用的根据数据结构
+    /// 火焰生成算法涉及的存储结构体，用来存储所有的火焰数据
     /// </summary>
-    partial class FireSpeardTree
+    public struct FireMap
     {
-        //受影响的数组
-        public List<FireRoutineBase> speardList;
-        //影响的列表
-        public List<float> effectSizes;
-        //自己
-        public FireRoutineBase fire;
-    }
+        public FireNodeBase[] allNodes;        //所有的节点
+        public List<KeyValuePair<int, float>>[] affectMap;      //相互影响的关系表
 
+        /// <summary>
+        /// 生成影响关系表，用来确定火焰之间的相互影响效果，建议扔到多线程加载
+        /// </summary>
+        public void ReadyNodes()
+        {
+            if (allNodes == null || allNodes.Length == 0) return;
+            affectMap = new List<KeyValuePair<int, float>>[allNodes.Length];
+            //检查都是后往前看，避免重复叠加
+            for(int i=0; i<allNodes.Length; i++)
+            {
+                Vector3 pos = allNodes[i].transform.position;
+                affectMap[i] = new List<KeyValuePair<int, float>>();
+                for(int j=0; j<i; j++)
+                {
+                    Vector3 thisPos = allNodes[j].transform.position;
+                    float maxRange = Mathf.Max(allNodes[j].burnRange, allNodes[i].burnRange);
+                    maxRange *= maxRange;   //平方来减少开发的运算量
+                    float dis = (pos - thisPos).sqrMagnitude;
+                    if (dis < maxRange)
+                    {
+                        affectMap[i].Add(new KeyValuePair<int, float>(j, dis / maxRange));
+                    }
+                }
+            }
+        }
+    }
     /// <summary>
     /// 火焰管理类，用于准备燃烧的影响关系，不直接管理每一个物体的燃烧，
     /// 具体的燃烧方法实际上是由根节点上的方法决定的
     /// </summary>
-    public class FireMangent : MonoBehaviour
+    public class FireMangent 
     {
-        //LinkedList<FireRoutineBase> mangentList;
-        FireRoutineBase fireBaseNode;
-        public float spreadRange = 10;
-        private List<FireSpeardTree> trees;
-
-        private void Awake()
+        private static FireMangent instance;
+        public static FireMangent Instance
         {
-            //int size = transform.childCount;
-            ////mangentList = new List<FireRoutineBase>();
-            //mangentList = new LinkedList<FireRoutineBase>();
-            //trees = new List<FireSpeardTree>();
-            //for (int i = 0; i < size; i++)
-            //{
-            //    FireRoutineBase routine = transform.GetChild(i).GetComponent<FireRoutineBase>();
-            //    if(routine != null)
-            //        mangentList.AddLast(routine);
-            //}
-            //插入方法到加载列表中
-            //Common.LoadScene.LoadSceneQueue.Instance.PutFuctionOnLoad(ReadLoadTree);
-            fireBaseNode = GetComponent<FireRoutineBase>();
+            get
+            {
+                if (instance == null)
+                    instance = new FireMangent();
+                return instance;
+            }
         }
 
-        //树加载用的临时数据
-        int nowIndex;
+        private FireMap fireMap;
+        private FireMangent()
+        {
+            fireMap = new FireMap();
+        }
+
+        public void AddFireNode(FireNodeBase[] fireNodeBases)
+        {
+            fireMap.allNodes = fireNodeBases;
+            fireMap.ReadyNodes();
+            Common.SustainCoroutine.Instance.AddCoroutine(RunNodes);
+        }
+
+        int nowIndex = 0;
         /// <summary>
-        /// 用来执行树加载时执行的算法，在场景开始时加载
+        /// 负责插入协程队列的方法，该方法会一直在协程中调用，不会停止
         /// </summary>
-        /// <returns>是否结束</returns>
-        public bool ReadLoadTree()
+        public bool RunNodes()
         {
-            //for(; nowIndex<mangentList.Count; )
-            //{
-            //    FireSpeardTree fireSpeardTree = new FireSpeardTree();
-            //    for(int i=0; i<mangentList.Count; i++)
-            //    {
-            //        float spread = 1.0f - Mathf.Clamp01(
-            //            (mangentList[i].transform.position - mangentList[nowIndex].transform.position).sqrMagnitude
-            //            / spreadRange
-            //            );
-            //        if(spread != 0)
-            //        {
-            //            if (fireSpeardTree.speardList == null)
-            //            {
-            //                //两个是对应的
-            //                fireSpeardTree.speardList = new List<FireRoutineBase>();
-            //                fireSpeardTree.effectSizes = new List<float>();
-            //            }
-            //            fireSpeardTree.speardList.Add(mangentList[i]);
-            //            fireSpeardTree.effectSizes.Add(spread);
-            //        }
-            //    }
-            //    //确定自己
-            //    fireSpeardTree.fire = mangentList[nowIndex];
-            //    //暂时先直接燃烧
-            //    fireSpeardTree.fire.BeginFire();
-            //    //加载全部后在再插入
-            //    if(fireSpeardTree.speardList != null)
-            //        trees.Add(fireSpeardTree);
+            for(int i=0; i<fireMap.allNodes.Length; i++)
+            {
+                //调用每一个燃烧的实时方法
+                fireMap.allNodes[i].BurnUpdate();
+            }
 
-            //    nowIndex++;
-            //    return false;
-            //}
-            //mangentList.Clear();
-            //mangentList = null;
-            return true;
+            fireMap.allNodes[nowIndex].RotinuFuction(fireMap, nowIndex);
+            nowIndex++;
+            nowIndex %= fireMap.allNodes.Length;
+            return false;
         }
 
-        //刷新树数据用的临时数据
-        int treeIndex = 0;
-        private void Update()
-        {
-            //if(trees != null)
-            //{
-            //    for(;treeIndex<trees.Count;)
-            //    {
-            //        for(int i=0; i<trees[treeIndex].speardList.Count; i++)
-            //        {
-            //            trees[treeIndex].speardList[i].AddBurn(
-            //                trees[treeIndex].fire.fireValue, trees[treeIndex].effectSizes[i]
-            //                );
-            //        }
-            //        //执行刷新方法
-            //        trees[treeIndex].fire.RotinuFuction(trees.Count);
-            //        //以下都是为了保证时时执行
-            //        treeIndex++;
-            //        treeIndex %= trees.Count;
-            //        return;
-            //    }
-            //}
-            fireBaseNode?.RotinuFuction(0);
-        }
     }
 }

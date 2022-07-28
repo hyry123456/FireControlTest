@@ -314,7 +314,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fireValue: 0
+  particleManege: {fileID: 0}
   fireIntensity: 0
+  arrivef: 0
   partUpMaxSpeed: 10
 --- !u!1 &401862062
 GameObject:
@@ -475,7 +477,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 401862062}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -709,7 +711,7 @@ GameObject:
   - component: {fileID: 842191935}
   - component: {fileID: 842191939}
   m_Layer: 7
-  m_Name: Cube (1)
+  m_Name: 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -785,7 +787,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 842191934}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 4.686656, y: -14.84, z: -53.13172}
+  m_LocalPosition: {x: 6.2, y: -14.84, z: -53.13172}
   m_LocalScale: {x: 10, y: 10, z: 1}
   m_Children: []
   m_Father: {fileID: 1267164746}
@@ -800,12 +802,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 842191934}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb9d1e40423fdc7499619099f89d94aa, type: 3}
+  m_Script: {fileID: 11500000, guid: 42394884de65e1d459cc1111952ba70f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   fireValue: 0
+  burnRange: 15
+  inflammability: 0.0751
   fireIntensity: 0
-  partUpMaxSpeed: 10
 --- !u!1 &897149497
 GameObject:
   m_ObjectHideFlags: 0
@@ -1019,7 +1022,6 @@ GameObject:
   - component: {fileID: 1167321951}
   - component: {fileID: 1167321950}
   - component: {fileID: 1167321949}
-  - component: {fileID: 1167321953}
   m_Layer: 7
   m_Name: Plane (1)
   m_TagString: Untagged
@@ -1104,21 +1106,6 @@ Transform:
   m_Father: {fileID: 1267164746}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 15}
---- !u!114 &1167321953
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1167321948}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb9d1e40423fdc7499619099f89d94aa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fireValue: 0
-  fireIntensity: 0
-  partUpMaxSpeed: 10
 --- !u!1 &1267164744
 GameObject:
   m_ObjectHideFlags: 0
@@ -1130,9 +1117,7 @@ GameObject:
   - component: {fileID: 1267164746}
   - component: {fileID: 1267164745}
   - component: {fileID: 1267164747}
-  - component: {fileID: 1267164749}
   - component: {fileID: 1267164748}
-  - component: {fileID: 1267164750}
   m_Layer: 0
   m_Name: ClustControl
   m_TagString: GPU Pipline
@@ -1163,6 +1148,9 @@ MonoBehaviour:
   compute: {fileID: 7200000, guid: 41f02ccf1a79fa4499daee1c2d74b16f, type: 3}
   showMat: {fileID: 2100000, guid: 8c1040755f788dd46a35e536f6849345, type: 2}
   createMesh: {fileID: 0}
+  createCount: 100
+  allClusterCount: 14
+  nowClusterIndex: 0
 --- !u!4 &1267164746
 Transform:
   m_ObjectHideFlags: 0
@@ -1268,57 +1256,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1267164744}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cb45c25dc879d9c4987a49fe201eac5d, type: 3}
+  m_Script: {fileID: 11500000, guid: 457a03dd345536043968c4dd82677162, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fireValue: 0
-  particlePerObjects: []
---- !u!114 &1267164749
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1267164744}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d2fc42186f8e1a44b9adeb780921d8b3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  spreadRange: 10
---- !u!215 &1267164750
-ReflectionProbe:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1267164744}
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Type: 0
-  m_Mode: 0
-  m_RefreshMode: 0
-  m_TimeSlicingMode: 0
-  m_Resolution: 128
-  m_UpdateFrequency: 0
-  m_BoxSize: {x: 114.71644, y: 30.39053, z: 104.75136}
-  m_BoxOffset: {x: 9.380627, y: -7.5830173, z: -52.37568}
-  m_NearClip: 0.3
-  m_FarClip: 1000
-  m_ShadowDistance: 100
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
-  m_CullingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IntensityMultiplier: 1
-  m_BlendDistance: 1
-  m_HDR: 1
-  m_BoxProjection: 0
-  m_RenderDynamicObjects: 0
-  m_UseOcclusionCulling: 1
-  m_Importance: 1
-  m_CustomBakedTexture: {fileID: 0}
+  particle: {fileID: 1462145057}
 --- !u!1 &1342827538
 GameObject:
   m_ObjectHideFlags: 0
@@ -1331,9 +1272,9 @@ GameObject:
   - component: {fileID: 1342827541}
   - component: {fileID: 1342827540}
   - component: {fileID: 1342827539}
-  - component: {fileID: 1342827543}
+  - component: {fileID: 1342827544}
   m_Layer: 7
-  m_Name: Cube (3)
+  m_Name: 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1415,7 +1356,7 @@ Transform:
   m_Father: {fileID: 1267164746}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1342827543
+--- !u!114 &1342827544
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1424,12 +1365,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1342827538}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb9d1e40423fdc7499619099f89d94aa, type: 3}
+  m_Script: {fileID: 11500000, guid: 42394884de65e1d459cc1111952ba70f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   fireValue: 0
+  burnRange: 15
+  inflammability: 0.0751
   fireIntensity: 0
-  partUpMaxSpeed: 10
 --- !u!1 &1423987370
 GameObject:
   m_ObjectHideFlags: 0
@@ -1605,6 +1547,154 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1450837080}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1462145056
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1462145058}
+  - component: {fileID: 1462145057}
+  m_Layer: 0
+  m_Name: Particle
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1462145057
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1462145056}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58dc89d397290ae4eb1db951f7f05aaf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  saveName: 
+  controlObjects: []
+  computeShader: {fileID: 7200000, guid: ba74161fd5936804ca4050e537ed8f04, type: 3}
+  noiseDatas:
+  - shapeMode: 2
+    position: {fileID: 1342827542}
+    arc: 0.01
+    radius: 1
+    cubeRange: {x: 10, y: 10, z: 1}
+    velocityBegin: {x: 0, y: 0, z: 0}
+    velocityEnd: {x: 0, y: 0, z: 0}
+    lifeTime: {x: 1, y: 5}
+    octave: 1
+    frequency: 2
+    intensity: 3
+    isSizeBySpeed: 0
+    sizeBySpeedMode: 0
+    smoothRange: {x: 1, y: 1}
+  - shapeMode: 2
+    position: {fileID: 2124627705}
+    arc: 0.01
+    radius: 1
+    cubeRange: {x: 10, y: 10, z: 1}
+    velocityBegin: {x: 0, y: 0, z: 0}
+    velocityEnd: {x: 0, y: 0, z: 0}
+    lifeTime: {x: 1, y: 5}
+    octave: 1
+    frequency: 2
+    intensity: 3
+    isSizeBySpeed: 0
+    sizeBySpeedMode: 0
+    smoothRange: {x: 1, y: 1}
+  - shapeMode: 2
+    position: {fileID: 842191938}
+    arc: 0.01
+    radius: 1
+    cubeRange: {x: 10, y: 10, z: 1}
+    velocityBegin: {x: 0, y: 0, z: 0}
+    velocityEnd: {x: 0, y: 0, z: 0}
+    lifeTime: {x: 1, y: 5}
+    octave: 1
+    frequency: 2
+    intensity: 3
+    isSizeBySpeed: 0
+    sizeBySpeedMode: 0
+    smoothRange: {x: 1, y: 1}
+  particleCount: 4000
+  particleOutCount: 1000
+  rowCount: 8
+  colCount: 8
+  material: {fileID: 2100000, guid: 789de006cfbefed4f8f34312a74e03bc, type: 2}
+  sizeCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: -0.2944336
+      value: 0.42895508
+      inSlope: -0.047307607
+      outSlope: -0.047307607
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.21433719
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 1.064889
+      outSlope: 1.064889
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.14717144
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  colorWithLive:
+    serializedVersion: 2
+    key0: {r: 0, g: 21.361254, b: 21.109945, a: 0}
+    key1: {r: 28.51895, g: 10.867865, b: 0, a: 1}
+    key2: {r: 8, g: 0, b: 0, a: 1}
+    key3: {r: 8, g: 0, b: 0, a: 0}
+    key4: {r: 0, g: 0, b: 0, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 16191
+    ctime2: 65535
+    ctime3: 65535
+    ctime4: 0
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 4433
+    atime2: 43562
+    atime3: 65535
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_NumColorKeys: 3
+    m_NumAlphaKeys: 4
+  mainTexture: {fileID: 2800000, guid: 81f1e4b9ef664d54a9dcf0e52ff98b25, type: 3}
+--- !u!4 &1462145058
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1462145056}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 19.600996, y: 2.0373282, z: -19.535322}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1521352129
 GameObject:
   m_ObjectHideFlags: 0
@@ -1710,7 +1800,6 @@ GameObject:
   - component: {fileID: 1570692953}
   - component: {fileID: 1570692952}
   - component: {fileID: 1570692951}
-  - component: {fileID: 1570692954}
   m_Layer: 7
   m_Name: Cube (4)
   m_TagString: Untagged
@@ -1794,21 +1883,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1570692949}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &1570692954
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1570692949}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb9d1e40423fdc7499619099f89d94aa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fireValue: 0
-  fireIntensity: 0
-  partUpMaxSpeed: 10
 --- !u!1 &1610721641 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4965335248996089932, guid: ab06be903ae6ab045b8ecbbe8d14570d, type: 3}
@@ -1913,7 +1987,7 @@ MonoBehaviour:
   groundAcceleration: 10
   airAcceleration: 5
   jumpHeight: 2
-  maxAirJumps: 2
+  maxAirJumps: 3
   maxGroundAngle: 25
   maxStairAngle: 25
   maxSnapSpeed: 100
@@ -2102,7 +2176,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1713607197}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.062817, y: 10.415087, z: -62.5}
+  m_LocalPosition: {x: 0.57101643, y: 3.4388149, z: 1.2741964}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1450837081}
@@ -2580,9 +2654,9 @@ GameObject:
   - component: {fileID: 2124627704}
   - component: {fileID: 2124627703}
   - component: {fileID: 2124627702}
-  - component: {fileID: 2124627706}
+  - component: {fileID: 2124627707}
   m_Layer: 7
-  m_Name: Cube (2)
+  m_Name: 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2664,7 +2738,7 @@ Transform:
   m_Father: {fileID: 1267164746}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2124627706
+--- !u!114 &2124627707
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2673,12 +2747,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 2124627701}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb9d1e40423fdc7499619099f89d94aa, type: 3}
+  m_Script: {fileID: 11500000, guid: 42394884de65e1d459cc1111952ba70f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   fireValue: 0
+  burnRange: 15
+  inflammability: 0.0751
   fireIntensity: 0
-  partUpMaxSpeed: 10
 --- !u!1001 &5199691404116436954
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -34,7 +34,6 @@ ToGeom vert(uint id : SV_InstanceID)
 void LoadOnePoint(ToGeom IN, inout TriangleStream<FragInput> tristream) {
     PointToQuad o;
     o.worldPos = IN.worldPos;
-    // o.time = IN.time;
     o.uvTransfer = IN.transferData;
     o.uvInterplation = IN.interplation;
     o.color = IN.color;
