@@ -1,5 +1,5 @@
 using UnityEngine;
-using Common.ParticleSystem;
+using CustomRP.GPUPipeline;
 
 namespace FireControl.Equip
 {
@@ -8,7 +8,8 @@ namespace FireControl.Equip
         public float suviverTime;
         public float waterGunforce = 5f;
 
-        ParticleWater particleWater;
+        //ParticleWater particleWater;
+        NoiseWater noiseWater;
 
         public Weapon_Water()
         {
@@ -17,12 +18,11 @@ namespace FireControl.Equip
 
         public override EquipReturn WeaponBehavior(Bag bag)
         {
-            //Debug.Log("运行了水枪");
 
             equipNeogor--;
-            if (particleWater == null)
+            if (noiseWater == null)
             {
-                particleWater = Common.CommonFunction.GetComponentInChild<ParticleWater>(bag.transform);
+                noiseWater = bag.gameObject.GetComponentInChildren<NoiseWater>();
             }
             EquipReturn equipReturn = new EquipReturn();
             //我们目前武器没有特殊效果，所以不管，之后一些装备需要添加
@@ -31,18 +31,20 @@ namespace FireControl.Equip
             //该武器是非伤害武器，同时其实一般的伤害也不是在这里加的
             //如果是治疗道具才需要在这里返回非零值
             equipReturn.value = attackValue;
-            if (particleWater == null)
+            if (noiseWater == null)
             {
                 Debug.Log("没找到");
                 return equipReturn;
             }
 
-            GameObject gameObject = particleWater.RunWater();
+            GameObject gameObject = noiseWater.RunWater();
             if(gameObject != null)
             {
                 Effect.ParticleNode fireNode = gameObject.GetComponent<Effect.ParticleNode>();
                 if (fireNode != null)
-                    fireNode.AddFireIntensity(-1);
+                {
+                    fireNode.AddFireIntensity(-5);
+                }
             }
             return equipReturn;
         }

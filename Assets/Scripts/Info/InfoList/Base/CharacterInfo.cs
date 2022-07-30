@@ -11,7 +11,7 @@ namespace FireControl.Info
         protected float hardTime = 0;
         List<float> statesTime = new List<float>();
 
-        /// <summary>        /// 怪物攻击力        /// </summary>
+        /// <summary>        /// 攻击力        /// </summary>
         public int attack = 1;
 
         public List<CharacterState> characterStates = new List<CharacterState>();
@@ -236,6 +236,7 @@ namespace FireControl.Info
         {
             changeSize = OnHPChange(changeSize, info);
             hp += changeSize;
+            Debug.Log("HP = " + hp);
             if (changeSize < 0)
                 OnHurt();
             if (hp <= 0)

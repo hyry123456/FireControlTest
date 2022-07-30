@@ -34,10 +34,6 @@ public class PostFXEffectSetting : ScriptableObject
 		[ColorUsage(false, true)]
 		public Color waterColor;
 
-		/// <summary>	/// 渲染掩码，表示水渲染到的层，之后采样时也是在该层采用的	/// </summary>
-		[RenderingLayerMaskField]
-		public int renderingLayerMask;
-
 		[Range(0, 0.5f)]
 		public float bilaterFilterStrength;
 
@@ -54,7 +50,6 @@ public class PostFXEffectSetting : ScriptableObject
 	public ParticleWater particleWater = new ParticleWater
 	{
 		waterColor = new Color(0.8f, 0.8f, 1),
-		renderingLayerMask = -1,
 		biurRadius = -50,
 		airRrfraRadio = 0.1f,
 		waterRrfraRadio = 0.3f

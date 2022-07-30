@@ -6,6 +6,9 @@ namespace FireControl.Effect
     public class ParticleNode : FireNodeBase
     {
         float arriveF = 0;
+        public float burnAttack = 1;
+
+        public float burnValue = 0;    //燃烧主角的血量值
 
         [System.NonSerialized]
         public int particleIndex = -1;
@@ -14,6 +17,17 @@ namespace FireControl.Effect
         public override void RotinuFuction(FireMap fireMap, int index)
         {
             List<KeyValuePair<int, float>> affects = fireMap.affectMap[index];
+            float playerDis = (Control.PlayerControl.Instance.transform.position - transform.position).sqrMagnitude;
+            if(playerDis < burnRange * burnRange)
+            {
+                burnValue +=  (playerDis / burnRange * burnRange) * 
+                    burnAttack * Time.deltaTime * fireIntensity;
+                if(burnValue > 1.0f)
+                {
+                    Control.PlayerControl.Instance.PlayerInfo.ChangeHP((int)-burnValue, null);
+                    burnValue = 0;
+                }
+            }
             for(int i=0; i<affects.Count; i++)
             {
                 float dis = FireIntensity - fireMap.allNodes[affects[i].Key].FireIntensity;

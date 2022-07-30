@@ -174,7 +174,6 @@ float3 CurlNoise3D(float3 pos, int octave)
     float n6 = Perlin3DFBM(float3(x, y, z - eps), octave).x;
     float c = (n5 - n6) / (2.0 * eps);
 
-    //Result[id.xy] = float4(a, b, 0, 1);
     return float3(a, b, c);
 }
 

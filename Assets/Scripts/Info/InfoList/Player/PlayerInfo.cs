@@ -31,7 +31,7 @@ namespace FireControl.Info
         protected override void OnHurt()
         {
             base.OnHurt();
-            Debug.Log("主角受伤");
+            //Debug.Log("主角受伤");
         }
 
         protected override void FixedUpdate()

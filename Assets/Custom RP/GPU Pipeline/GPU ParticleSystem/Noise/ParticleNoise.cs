@@ -16,6 +16,8 @@ namespace CustomRP.GPUPipeline
         private int particleCount = 1000;   //每组粒子数量
         [SerializeField]
         private int particleOutCount = 100; //每秒输出数量
+        [SerializeField]
+        private bool runInUpdate = true;
 
         public int ParticleOutCount
         {
@@ -40,7 +42,7 @@ namespace CustomRP.GPUPipeline
         private int kernel_Updata;
         private int kernel_FixUpdata;
         private bool isInsert;
-        private uint arrive;
+        public uint arrive;
         private float arriveF = 0;
         public ParticleInitializeData[] init;
 
@@ -87,25 +89,30 @@ namespace CustomRP.GPUPipeline
 
         private void OnEnable()
         {
-            ReadyBuffer();
             if (material.renderQueue >= 3000)
                 GPUPipelineDrawStack.Instance.InsertRender(this, true);
             else
                 GPUPipelineDrawStack.Instance.InsertRender(this, false);
             isInsert = true;
+
+            ReadyBuffer();
             SetUnUpdateData();
         }
 
         private void Update()
         {
-            //arriveF += Time.deltaTime;
-            //uint add = (uint)(arriveF / (1.0f / particleOutCount));
-            //if(add > 0)
-            //{
-            //    arrive += add;
-            //    arriveF = 0;
-            //    arrive %= 1000000007;
-            //}
+            if (runInUpdate)
+            {
+                arriveF += Time.deltaTime;
+                uint add = (uint)(arriveF / (1.0f / particleOutCount));
+                if (add > 0)
+                {
+                    arrive += add;
+                    arriveF = 0;
+                    arrive %= 1000000007;
+                }
+            }
+
 
             UpdateInitial();
 
@@ -138,7 +145,6 @@ namespace CustomRP.GPUPipeline
         {
             if (isInsert)
             {
-                //ReadyBuffer();
                 SetUnUpdateData();
                 ReadyInitialParticle();
             }
@@ -288,6 +294,15 @@ namespace CustomRP.GPUPipeline
             computeShader.SetVector(timeId, new Vector4(Time.time, Time.deltaTime, Time.fixedDeltaTime));
             //设置枚举位置
             //computeShader.SetInt(arriveIndexId, (int)arrive);
+
+            if (runInUpdate)
+            {
+                for (int i = 0; i < init.Length; i++)
+                {
+                    init[i].arriveIndex = arrive;
+                }
+                initializeBuffer.SetData(init);
+            }
         }
 
         private void SetFixUpdateData()
@@ -297,8 +312,6 @@ namespace CustomRP.GPUPipeline
 
             //设置时间
             computeShader.SetVector(timeId, new Vector4(Time.time, Time.deltaTime, Time.fixedDeltaTime));
-            //设置枚举位置
-            //computeShader.SetInt(arriveIndexId, arrive);
         }
 
         public override void DrawClustByCamera(ScriptableRenderContext context, CommandBuffer buffer, ClustDrawType drawType, Camera camera)

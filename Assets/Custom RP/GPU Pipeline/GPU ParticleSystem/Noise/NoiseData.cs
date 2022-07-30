@@ -75,5 +75,6 @@ namespace CustomRP.GPUPipeline
         public SizeBySpeedMode sizeBySpeedMode = SizeBySpeedMode.TIME;
         public Vector2 smoothRange = Vector2.up;
 
+
     }
 }
